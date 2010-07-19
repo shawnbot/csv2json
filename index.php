@@ -21,10 +21,43 @@ function pretty_size($bytes, $precision=1) {
   return sprintf('%s %s', round($bytes, $precision), $units[$pow]);
 }
 
-// if using an uploaded file, grab its temp file name
-if (isset($_FILES['upload']) && !empty($_FILES['upload']['name'])) {
+function escape($text, $quotes=true) {
+  return htmlspecialchars($text, $quotes ? ENT_QUOTES : ENT_NOQUOTES, 'UTF-8');
+}
 
-  $filename = $_FILES['upload']['tmp_name'];
+$max_upload_size = pretty_size(ini_get('upload_max_filesize'));
+// if using an uploaded file, grab its temp file name
+if (isset($_FILES['upload'])) {
+
+  $error_code = $_FILES['upload']['error'];
+  if ($error_code == UPLOAD_ERR_OK && !empty($_FILES['upload']['name'])) {
+
+    $filename = $_FILES['upload']['tmp_name'];
+
+  } else if ($error_code != UPLOAD_ERR_OK) {
+
+    switch ($error) {
+      case UPLOAD_ERR_INI_SIZE:
+        $error = sprintf('Exceeded max upload file size: %s', $max_upload_size);
+        break;
+      case UPLOAD_ERR_FORM_SIZE:
+        $error = sprintf('Exceeded max upload size: %s', $_POST['MAX_FILE_SIZE']);
+        break;
+      case UPLOAD_ERR_PARTIAL:
+        $error = 'File upload incomplete.';
+        break;
+      case UPLOAD_ERR_NO_TMP_DIR:
+        $error = 'Missing temp directory.';
+        break;
+      case UPLOAD_ERR_CANT_WRITE:
+        $error = 'Unable to write to temp directory.';
+        break;
+      case UPLOAD_ERR_EXTENSION:
+        $error = 'A PHP extension stopped the file upload.';
+        break;
+    }
+
+  }
 
 // if using pasted text, write it to a temp file
 } else if ($_POST['csv']) {

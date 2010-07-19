@@ -19,7 +19,7 @@
       <h2>CSV Input</h2>
       <ol>
         <li id="upload">
-          <label>Upload a file (max size: <strong><?= pretty_size(ini_get('upload_max_filesize')) ?></strong>): <input type="file" name="upload"/></label>
+          <label>Upload a file (max size: <strong><?= $max_upload_size ?></strong>): <input type="file" name="upload"/></label>
           <em class="either-or">or</em>
         </li>
         <li id="post">
@@ -42,23 +42,23 @@
               <option value="|">|</option>
               <option value="" selected="selected">other:</option>
             </select>
-            <input id="delimiter" name="delimiter" type="text" size="1" value="<?= htmlspecialchars($delimiter) ?>"/></label></li>
+            <input id="delimiter" name="delimiter" type="text" size="1" value="<?= escape($delimiter) ?>"/></label></li>
         <li><label>Columns quoted with:
-            <input name="quotechar" type="text" size="1" value="<?= htmlspecialchars($quotechar) ?>"/></label></li>
+            <input name="quotechar" type="text" size="1" value="<?= escape($quotechar) ?>"/></label></li>
       </ul>
       <h3>Output Options</h3>
       <ul>
         <li><label>JSON-P callback function:
-            <input name="callback" type="text" size="16" value="<?= htmlspecialchars($callback) ?>"/></label>
+            <input name="callback" type="text" size="16" value="<?= escape($callback) ?>"/></label>
             <em class="either-or">or</em>
         </li>
         <li><label>Assign to JavaScript variable name:
-            <input name="variable" type="text" size="16" value="<?= htmlspecialchars($variable) ?>"/></label></li>
+            <input name="variable" type="text" size="16" value="<?= escape($variable) ?>"/></label></li>
         <li><label>Indent JSON by
-            <input name="indent" type="text" size="1" value="<?= htmlspecialchars($indent) ?>"/> spaces</label></li>
+            <input name="indent" type="text" size="1" value="<?= escape($indent) ?>"/> spaces</label></li>
         <li><label><input type="checkbox" name="download" value="true" <?php if ($download) print 'checked="checked"'; ?> />
             Download as file (rather than displaying in a text field).</label>
-            <div>File name: <input name="download_name" type="text" size="16" value="<?= htmlspecialchars($output_filename) ?>" /></div></li>
+            <div>File name: <input name="download_name" type="text" size="16" value="<?= escape($output_filename) ?>" /></div></li>
       </ul>
       <p class="submit"><input type="submit" text="Submit"/> <input type="reset" value="Reset"/></p>
     </form>
@@ -66,12 +66,20 @@
     <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
     <form id="output">
       <h2>JSON Output</h2>
-      <pre id="cmd">$ <?= $cmd ?></pre>
-      <?php if (isset($json) && !empty($json)): ?>
-      <p id="patience"><em>Be patient. Writing <?= pretty_size(mb_strlen($json)) ?> of JSON...</em></p>
-      <textarea id="output" cols="50" rows="32"><?= trim($json) ?></textarea>
-      <?php else: ?>
+
+      <?php if (!empty($error)): ?>
+      <p class="error"><strong><?= $error ?></strong></p>
       <?php endif; ?>
+
+      <?php if (!empty($cmd)): ?>
+      <pre id="cmd">$ <?= $cmd ?></pre>
+      <?php endif; ?>
+
+      <?php if (!empty($json)): ?>
+      <p id="patience"><em>Be patient. Writing <?= pretty_size(mb_strlen($json)) ?> of JSON...</em></p>
+      <textarea id="output" cols="50" rows="32"><?= escape(trim($json), false) ?></textarea>
+      <?php endif; ?>
+
     </form>
     <?php endif; ?>
 
