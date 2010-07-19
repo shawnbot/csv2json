@@ -42,6 +42,7 @@ $quotechar = option('quotechar', '"');
 $indent = option('indent', 0);
 $variable = option('variable', null);
 $download = option('download', false) == 'true';
+$callback = option('callback', null);
 $output_filename = option('download_name', 'data.json');
 
 if ($filename) {
@@ -49,7 +50,8 @@ if ($filename) {
   $opts = array('F' => $delimiter,
                 'q' => $quotechar,
                 'i' => $indent,
-                'v' => $variable);
+                'v' => $variable,
+                'p' => $callback);
   $options = '';
   foreach ($opts as $o => $v) {
     // the quotechar argument can be empty

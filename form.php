@@ -1,3 +1,12 @@
+<?php
+/*
+ * vim:et sts=2 sw=2 ai nocindent:
+ * by Shawn Allen, shawn at stamen dot com
+ *
+ * NOTE: This file is not intended to work standalone, but is included by 
+ * index.php.
+ */
+?>
 <html>
   <head>
     <title>CSV &rarr; JSON</title>
@@ -39,13 +48,17 @@
       </ul>
       <h3>Output Options</h3>
       <ul>
+        <li><label>JSON-P callback function:
+            <input name="callback" type="text" size="16" value="<?= htmlspecialchars($callback) ?>"/></label>
+            <em class="either-or">or</em>
+        </li>
+        <li><label>Assign to JavaScript variable name:
+            <input name="variable" type="text" size="16" value="<?= htmlspecialchars($variable) ?>"/></label></li>
         <li><label>Indent JSON by
             <input name="indent" type="text" size="1" value="<?= htmlspecialchars($indent) ?>"/> spaces</label></li>
-        <li><label>Assign to JavaScript variable name:
-            <input name="variable" type="text" size="1" value="<?= htmlspecialchars($variable) ?>"/></label></li>
         <li><label><input type="checkbox" name="download" value="true" <?php if ($download) print 'checked="checked"'; ?> />
             Download as file (rather than displaying in a text field).</label>
-            <div>File name: <input name="download_name" type="text" value="<?= htmlspecialchars($output_filename) ?>" /></div></li>
+            <div>File name: <input name="download_name" type="text" size="16" value="<?= htmlspecialchars($output_filename) ?>" /></div></li>
       </ul>
       <p class="submit"><input type="submit" text="Submit"/> <input type="reset" value="Reset"/></p>
     </form>

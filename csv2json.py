@@ -13,7 +13,7 @@ delimiter_map = {'tab': '\t',
                  'sc':  ';',
                  'bar': '|'}
 
-def csv2json(csv_file, delimiter=',', quotechar='"', indent=None, variable=None, **csv_opts):
+def csv2json(csv_file, delimiter=',', quotechar='"', indent=None, callback=None, variable=None, **csv_opts):
     if delimiter_map.has_key(delimiter):
         delimiter = delimiter_map.get(delimiter)
     reader = csv.DictReader(csv_file, delimiter=delimiter, quotechar=quotechar or None, **csv_opts)
@@ -21,10 +21,14 @@ def csv2json(csv_file, delimiter=',', quotechar='"', indent=None, variable=None,
     if hasattr(indent, 'isdigit') and indent.isdigit():
         indent = ' ' * int(indent)
     out = StringIO()
-    if variable:
+    if callback:
+        out.write('%s(' % callback);
+    elif variable:
         out.write('var %s = ' % variable)
     simplejson.dump(rows, out, indent=indent)
-    if variable:
+    if callback:
+        out.write(');');
+    elif variable:
         out.write(';')
     return out.getvalue()
 
@@ -40,6 +44,8 @@ if __name__ == '__main__':
     parser.add_option('-i', '--indent', dest='indent', default=None,
                       help='The string with which to indent the output GeoJSON, '
                            'defaults to none.')
+    parser.add_option('-p', '--callback', dest='callback', default=None,
+                      help='The JSON-P callback function name.')
     parser.add_option('-v', '--variable', dest='var', default=None,
                       help='If provided, the output becomes a JavaScript statement'
                       ' which assigns the JSON structure to a variable of the same'
@@ -47,4 +53,4 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
 
     csv_file = (len(args) > 0) and open(args.pop(0), 'rb') or sys.stdin
-    print csv2json(csv_file, options.fs, options.fq, options.indent, options.var)
+    print csv2json(csv_file, options.fs, options.fq, options.indent, options.callback, options.var)
