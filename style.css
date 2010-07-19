@@ -1,0 +1,74 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 14px;
+  font-family: Verdana, sans-serif;
+  padding: 1em;
+}
+
+h1 {
+  font-size: 150%;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #999;
+}
+
+h2 {
+  font-size: 120%;
+  padding: 5px;
+  background: #eee;
+}
+
+h3 {
+  font-size: 100%;
+  margin-bottom: 5px;
+}
+
+h1, h2, p, ul, ol {
+  margin: 0 0 .5em 0;
+}
+
+ul, ol {
+  margin-bottom: 1em;
+  padding-left: 3ex;
+}
+
+ul, ul li {
+  list-style-type: circle;
+}
+
+li { padding-bottom: 2px; }
+
+textarea {
+  width: 99.5%;
+  max-width: 99.5%;
+}
+
+.either-or {
+  display: block;
+  font-weight: bold;
+}
+
+form {
+  width: 48%;
+  float: left;
+  margin: 0 1em 1em 0;
+}
+
+p.submit input {
+  font-family: inherit;
+  background: #000;
+  color: #fff;
+  font-size: 110%;
+  font-weight: bold;
+}
+
+input[type="reset"] { background: #666 !important; }
+
+pre { font-size: 10px; }
+
+#patience {
+  color: #666;
+}
