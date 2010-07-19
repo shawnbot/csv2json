@@ -25,7 +25,16 @@ function escape($text, $quotes=true) {
   return htmlspecialchars($text, $quotes ? ENT_QUOTES : ENT_NOQUOTES, 'UTF-8');
 }
 
-$max_upload_size = pretty_size(ini_get('upload_max_filesize'));
+/*
+ * Comment out this line or change the value to specify a local upload file size 
+ * limit.
+ */
+$max_form_size = 100 * 1024; // 100K
+
+$max_upload_size = ini_get('upload_max_filesize');
+if (isset($max_form_size)) $max_upload_size = min($max_form_size, $max_upload_size);
+$max_upload_size = pretty_size($max_upload_size);
+
 // if using an uploaded file, grab its temp file name
 if (isset($_FILES['upload'])) {
 

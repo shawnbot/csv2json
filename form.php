@@ -16,10 +16,16 @@
     <h1>CSV &rarr; JSON</h1>
     <form id="input" action="<?= $_SERVER['REQUEST_URI'] ?>"
       method="POST" enctype="multipart/form-data">
+
+      <?php if (isset($max_form_size)): ?>
+      <input type="hidden" name="MAX_FILE_SIZE" value="<?= $max_form_size ?>"/>
+      <?php endif; ?>
+
       <h2>CSV Input</h2>
       <ol>
         <li id="upload">
-          <label>Upload a file (max size: <strong><?= $max_upload_size ?></strong>): <input type="file" name="upload"/></label>
+          <label>Upload a file (max size: <strong><?= $max_upload_size ?></strong>):
+          <input type="file" name="upload" /></label>
           <em class="either-or">or</em>
         </li>
         <li id="post">
