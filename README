@@ -1,0 +1,10 @@
+csv2json is both a command line tool and a web interface for converting
+comma-separated value (CSV) files to JSON or JavaScript. It's comprised of two
+parts:
+
+1. a Python script (csv2json.py) that reads CSV and outputs JSON or JavaScript
+
+2. a PHP web service and HTML interface that accepts CSV input via either file
+   upload or HTTP POST data and outputs the JSON/JavaScript either as a file or as
+   text to be copied from a web browser.
+
