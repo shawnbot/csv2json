@@ -10,7 +10,7 @@ function option($name, $default) {
 
 // adapted from: http://php.net/filesize
 function pretty_size($bytes, $precision=1) { 
-  $units = array('b', 'KB', 'MB', 'GB', 'TB'); 
+  $units = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb'); 
 
   $bytes = max($bytes, 0);
   $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
@@ -31,19 +31,39 @@ function escape($text, $quotes=true) {
  */
 $max_form_size = 100 * 1024; // 100K
 
+/*
+ * whether to place uploaded file contents in the raw input field
+ * (useful for re-submitting content without having to re-select the file from 
+ * an upload dialog).
+ */
+$post_file_input = false;
+// if $post_file_input is true, the max number of displayed input lines from 
+// uploaded files
+$show_max_lines = 10000;
+
 $max_upload_size = ini_get('upload_max_filesize');
 if (isset($max_form_size)) $max_upload_size = min($max_form_size, $max_upload_size);
 $max_upload_size = pretty_size($max_upload_size);
 
 // if using an uploaded file, grab its temp file name
-if (isset($_FILES['upload'])) {
+if (isset($_FILES['upload']) &&
+    $_FILES['upload']['error'] != UPLOAD_ERR_NO_FILE) {
 
   $error_code = $_FILES['upload']['error'];
-  if ($error_code == UPLOAD_ERR_OK && !empty($_FILES['upload']['name'])) {
+  if ($error_code == UPLOAD_ERR_OK) {
 
     $filename = $_FILES['upload']['tmp_name'];
 
-  } else if ($error_code != UPLOAD_ERR_OK) {
+    if ($post_file_input) {
+      $fp = fopen($filename, 'r');
+      $input = array();
+      while (!feof($fp) && count($input) < $show_max_lines) {
+        $input[] = fgets($fp, 1024);
+      }
+      $input = trim(implode("\n", $input));
+    }
+
+  } else {
 
     switch ($error) {
       case UPLOAD_ERR_INI_SIZE:
@@ -65,15 +85,16 @@ if (isset($_FILES['upload'])) {
         $error = 'A PHP extension stopped the file upload.';
         break;
     }
-
   }
 
 // if using pasted text, write it to a temp file
 } else if ($_POST['csv']) {
 
+  $input = trim($_POST['csv']);
+
   $filename = tempnam('/tmp', 'upload-csv');
   $fp = fopen($filename, 'wb');
-  fwrite($fp, trim($_POST['csv']));
+  fwrite($fp, $input);
   fclose($fp);
 
 }
@@ -102,7 +123,14 @@ if ($filename) {
   }
   // shell out the conversion to csv2json.py, capturing stdout
   $cmd = "python csv2json.py $options $filename";
-  $json = `$cmd`;
+  $output = array();
+  $status = 0;
+  exec($cmd, $output, $status);
+  if ($status == 0) {
+    $json = join("\n", $output);
+  } else {
+    $error = join("\n", $output);
+  }
 
   // if we're downloading, send the appropriate headers
   if (!empty($json) && $download) {
