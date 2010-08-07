@@ -69,6 +69,6 @@ input[type="reset"] { background: #666 !important; }
 
 pre { font-size: 10px; }
 
-#patience {
+.patience {
   color: #666;
 }

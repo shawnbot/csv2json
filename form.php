@@ -30,7 +30,7 @@
         </li>
         <li id="post">
           <p><label for="csv">Paste your data here:</label></p>
-          <textarea name="csv" cols="50" rows="5"><?= $_POST['csv'] ?></textarea>
+          <textarea name="csv" cols="50" rows="5"><?= $input ?></textarea>
         </li>
       </ol>
 
@@ -71,6 +71,7 @@
 
     <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
     <form id="output">
+
       <h2>JSON Output</h2>
 
       <?php if (!empty($error)): ?>
@@ -82,7 +83,7 @@
       <?php endif; ?>
 
       <?php if (!empty($json)): ?>
-      <p id="patience"><em>Be patient. Writing <?= pretty_size(mb_strlen($json)) ?> of JSON...</em></p>
+      <p class="patience"><em>Be patient. Writing <?= pretty_size(mb_strlen($json)) ?> of JSON...</em></p>
       <textarea id="output" cols="50" rows="32"><?= escape(trim($json), false) ?></textarea>
       <?php endif; ?>
 
