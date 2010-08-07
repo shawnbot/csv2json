@@ -52,5 +52,12 @@ if __name__ == '__main__':
                       ' name.')
     options, args = parser.parse_args()
 
-    csv_file = (len(args) > 0) and open(args.pop(0), 'rb') or sys.stdin
+    close = False
+    if len(args) > 0 and args[0] != '-':
+        csv_file = open(args.pop(0), 'r')
+        close = True
+    else:
+        csv_file = sys.stdin
     print csv2json(csv_file, options.fs, options.fq, options.indent, options.callback, options.var)
+    if close:
+        csv_file.close()
