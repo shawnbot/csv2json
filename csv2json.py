@@ -25,7 +25,7 @@ def csv2json(csv_file, delimiter=',', quotechar='"', indent=None, callback=None,
         out.write('%s(' % callback);
     elif variable:
         out.write('var %s = ' % variable)
-    simplejson.dump(rows, out, indent=indent)
+    simplejson.dump(rows, out, indent=indent, separators=(',', ':'))
     if callback:
         out.write(');');
     elif variable:
