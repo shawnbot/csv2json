@@ -57,17 +57,9 @@ def csv2json(csv_file, delimiter=',', quotechar='"', indent=None, callback=None,
 
     if hasattr(indent, 'isdigit') and indent.isdigit():
         indent = ' ' * int(indent)
-    out = StringIO()
-    if callback:
-        out.write('%s(' % callback);
-    elif variable:
-        out.write('var %s = ' % variable)
-    json.dump(rows, out, indent=indent, separators=(',', ':'))
-    if callback:
-        out.write(');');
-    elif variable:
-        out.write(';')
-    return out.getvalue()
+
+    return json.dumps(rows, indent=indent, separators=(',', ':'),
+                      ensure_ascii=False)
 
 if __name__ == '__main__':
     import sys
